@@ -11,6 +11,7 @@ import {
 import { useQuery } from '@tanstack/react-query';
 import { useStore } from '../store/useStore';
 import { Character } from '../types';
+import { useCharacterSearch } from '@/hooks/useCharacterSearch';
 
 export interface MultiSelectProps {
   placeholder?: string;
@@ -25,18 +26,7 @@ export const MultiSelect: React.FC<MultiSelectProps> = ({
   const [isOpen, setIsOpen] = useState(false);
   const { selectedCharacters, addCharacter, removeCharacter } = useStore();
 
-  const { data, isLoading, error } = useQuery({
-    queryKey: ['characters', query],
-    queryFn: async () => {
-      if (!query) return { results: [] };
-      const response = await fetch(
-        `https://rickandmortyapi.com/api/character/?name=${query}`
-      );
-      if (!response.ok) throw new Error('API request failed');
-      return response.json();
-    },
-    enabled: query.length > 0,
-  });
+  const { data, isLoading, error } = useCharacterSearch(query);
 
   const highlightText = (text: string, searchWord: string) => {
     const regex = new RegExp(`(${searchWord})`, 'gi');
