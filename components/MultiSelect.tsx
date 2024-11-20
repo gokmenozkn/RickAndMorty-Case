@@ -1,17 +1,10 @@
 import React, { useState } from 'react';
-import {
-  View,
-  Text,
-  TextInput,
-  Image,
-  TouchableOpacity,
-  ActivityIndicator,
-  FlatList,
-} from 'react-native';
-import { useQuery } from '@tanstack/react-query';
+import { View, Text, TextInput, TouchableOpacity } from 'react-native';
 import { useStore } from '../store/useStore';
 import { Character } from '../types';
 import { useCharacterSearch } from '@/hooks/useCharacterSearch';
+import { SelectedItem } from './SelectedItem';
+import SearchResults from './SearchResults';
 
 export interface MultiSelectProps {
   placeholder?: string;
@@ -28,25 +21,6 @@ export const MultiSelect: React.FC<MultiSelectProps> = ({
 
   const { data, isLoading, error } = useCharacterSearch(query);
 
-  const highlightText = (text: string, searchWord: string) => {
-    const regex = new RegExp(`(${searchWord})`, 'gi');
-    const parts = text.split(regex);
-
-    return (
-      <Text className='text-gray-800 text-base'>
-        {parts.map((part, i) =>
-          part.toLowerCase() === searchWord.toLowerCase() ? (
-            <Text key={i} className='font-bold'>
-              {part}
-            </Text>
-          ) : (
-            <Text key={i}>{part}</Text>
-          )
-        )}
-      </Text>
-    );
-  };
-
   const handleSelect = (character: Character) => {
     if (selectedCharacters.find((c) => c.id === character.id)) {
       removeCharacter(character.id);
@@ -62,18 +36,11 @@ export const MultiSelect: React.FC<MultiSelectProps> = ({
         <View className='items-center flex-row flex-wrap gap-2 mb-2'>
           {/* selected characters */}
           {selectedCharacters.map((character) => (
-            <View
+            <SelectedItem
               key={character.id}
-              className='bg-gray-100 rounded-full px-3 py-1.5 flex-row items-center'
-            >
-              <Text className='text-gray-800'>{character.name}</Text>
-              <TouchableOpacity
-                onPress={() => removeCharacter(character.id)}
-                className='ml-2'
-              >
-                <Text className='text-gray-500 text-lg'>×</Text>
-              </TouchableOpacity>
-            </View>
+              item={character}
+              onRemove={removeCharacter}
+            />
           ))}
 
           {/* Search input */}
@@ -94,42 +61,14 @@ export const MultiSelect: React.FC<MultiSelectProps> = ({
 
       {isOpen && (
         <View className='mt-1 border border-gray-200 rounded-lg bg-white max-h-80'>
-          {isLoading ? (
-            <ActivityIndicator className='py-4' />
-          ) : error ? (
-            <Text className='p-4 text-red-500'>Error loading characters</Text>
-          ) : (
-            <FlatList
-              data={data?.results || []}
-              keyExtractor={(item) => item.id.toString()}
-              renderItem={({ item }) => (
-                <TouchableOpacity
-                  onPress={() => handleSelect(item)}
-                  className='flex-row items-center p-3 border-b border-gray-100'
-                >
-                  <View className='mr-3'>
-                    <Image
-                      source={{ uri: item.image }}
-                      className='w-12 h-12 rounded-lg'
-                    />
-                  </View>
-
-                  <View className='flex-1'>
-                    {highlightText(item.name, query)}
-                    <Text className='text-gray-500 text-sm'>
-                      {item.episode.length} Episodes
-                    </Text>
-                  </View>
-
-                  <View className='w-6 h-6 border border-gray-300 rounded mr-2 justify-center items-center'>
-                    {selectedCharacters.find((c) => c.id === item.id) && (
-                      <Text className='text-blue-500'>✓</Text>
-                    )}
-                  </View>
-                </TouchableOpacity>
-              )}
-            />
-          )}
+          <SearchResults
+            data={data?.results || []}
+            isLoading={isLoading}
+            error={error}
+            searchQuery={query}
+            selectedIds={selectedCharacters.map((c) => c.id)}
+            onSelect={handleSelect}
+          />
         </View>
       )}
     </View>
