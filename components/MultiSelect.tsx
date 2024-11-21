@@ -6,6 +6,7 @@ import { useCharacterSearch } from '@/hooks/useCharacterSearch';
 import { SelectedItem } from './SelectedItem';
 import SearchResults from './SearchResults';
 import { SearchInput } from './SearchInput';
+import { SelectedItems } from './SelectedItems';
 
 export interface MultiSelectProps {
   placeholder?: string;
@@ -33,16 +34,20 @@ export const MultiSelect: React.FC<MultiSelectProps> = ({
 
   return (
     <View className='w-full'>
-      <View className='border border-gray-200 rounded-xl px-4 py-2 bg-white'>
+      <View className='border border-gray-400 rounded-xl px-4 py-2 bg-white'>
         <View className='items-center flex-row flex-wrap gap-2 mb-2'>
           {/* selected characters */}
-          {selectedCharacters.map((character) => (
+          {/* {selectedCharacters.map((character) => (
             <SelectedItem
               key={character.id}
               item={character}
               onRemove={removeCharacter}
             />
-          ))}
+          ))} */}
+          <SelectedItems
+            items={selectedCharacters}
+            onRemove={removeCharacter}
+          />
 
           {/* Search input */}
           <SearchInput
@@ -60,7 +65,7 @@ export const MultiSelect: React.FC<MultiSelectProps> = ({
       </View>
 
       {isOpen && (
-        <View className='mt-1 border border-gray-200 rounded-lg bg-white max-h-80'>
+        <View className='mt-1 border border-gray-400 rounded-lg bg-white max-h-80'>
           <SearchResults
             data={data?.results || []}
             isLoading={isLoading}

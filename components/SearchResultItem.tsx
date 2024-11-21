@@ -20,7 +20,7 @@ const SearchResultItem: React.FC<SearchResultItemProps> = ({
   return (
     <TouchableOpacity
       onPress={onSelect}
-      className='flex-row items-center p-3 border-b border-gray-100'
+      className='flex-row items-center p-3 border-b border-gray-400'
     >
       <View className='mr-3'>
         <Image source={{ uri: item.image }} className='w-12 h-12 rounded-lg' />
