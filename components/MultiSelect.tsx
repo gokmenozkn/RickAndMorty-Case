@@ -1,9 +1,8 @@
 import React, { useState } from 'react';
-import { View, Text, TextInput, TouchableOpacity } from 'react-native';
+import { View, Text, TouchableOpacity } from 'react-native';
 import { useStore } from '../store/useStore';
 import { Character } from '../types';
 import { useCharacterSearch } from '@/hooks/useCharacterSearch';
-import { SelectedItem } from './SelectedItem';
 import SearchResults from './SearchResults';
 import { SearchInput } from './SearchInput';
 import { SelectedItems } from './SelectedItems';
@@ -37,13 +36,6 @@ export const MultiSelect: React.FC<MultiSelectProps> = ({
       <View className='border border-gray-400 rounded-xl px-4 py-2 bg-white'>
         <View className='items-center flex-row flex-wrap gap-2 mb-2'>
           {/* selected characters */}
-          {/* {selectedCharacters.map((character) => (
-            <SelectedItem
-              key={character.id}
-              item={character}
-              onRemove={removeCharacter}
-            />
-          ))} */}
           <SelectedItems
             items={selectedCharacters}
             onRemove={removeCharacter}
