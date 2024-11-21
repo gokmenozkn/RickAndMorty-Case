@@ -5,6 +5,7 @@ import { Character } from '../types';
 import { useCharacterSearch } from '@/hooks/useCharacterSearch';
 import { SelectedItem } from './SelectedItem';
 import SearchResults from './SearchResults';
+import { SearchInput } from './SearchInput';
 
 export interface MultiSelectProps {
   placeholder?: string;
@@ -44,10 +45,9 @@ export const MultiSelect: React.FC<MultiSelectProps> = ({
           ))}
 
           {/* Search input */}
-          <TextInput
-            className='flex-1 min-w-[120px] text-base'
+          <SearchInput
             value={query}
-            onChangeText={setQuery}
+            onChange={setQuery}
             placeholder={placeholder}
             onFocus={() => setIsOpen(true)}
           />
